@@ -1,65 +1,80 @@
-import Image from "next/image";
+import Link from "next/link";
+import { Container, Flex, Heading, Text, Button, Card, Box } from "@radix-ui/themes";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <Box style={{ minHeight: "100vh", background: "var(--gray-1)" }}>
+      {/* Header */}
+      <Container size="3" px="4" py="4">
+        <Heading size="4" weight="bold">
+          JustLog
+        </Heading>
+      </Container>
+
+      {/* Hero */}
+      <Container size="2" px="4">
+        <Flex direction="column" align="center" gap="6" py="9">
+          <Flex direction="column" align="center" gap="3">
+            <Heading size="8" align="center" weight="bold">
+              이력서 한 장으로
+              <br />
+              면접을 준비하세요
+            </Heading>
+            <Text size="4" color="gray" align="center" style={{ maxWidth: 480 }}>
+              PDF 이력서를 업로드하면 AI가 분석하여
+              <br />
+              맞춤형 면접 질문을 생성해드립니다.
+            </Text>
+          </Flex>
+
+          <Link href="/upload" style={{ textDecoration: "none" }}>
+            <Button size="4" variant="solid" highContrast style={{ cursor: "pointer" }}>
+              시작하기
+            </Button>
+          </Link>
+        </Flex>
+      </Container>
+
+      {/* 3-Step Cards */}
+      <Container size="3" px="4" pb="9">
+        <Flex direction={{ initial: "column", sm: "row" }} gap="4" justify="center">
+          <Card size="3" style={{ flex: 1 }}>
+            <Flex direction="column" gap="2">
+              <Text size="6" weight="bold" color="gray">
+                01
+              </Text>
+              <Heading size="4">이력서 업로드</Heading>
+              <Text size="2" color="gray">
+                PDF 형식의 이력서 파일을 드래그하거나 선택하여 업로드합니다.
+              </Text>
+            </Flex>
+          </Card>
+
+          <Card size="3" style={{ flex: 1 }}>
+            <Flex direction="column" gap="2">
+              <Text size="6" weight="bold" color="gray">
+                02
+              </Text>
+              <Heading size="4">AI 분석</Heading>
+              <Text size="2" color="gray">
+                Gemini AI가 이력서 내용을 분석하여 핵심 경험과 역량을 파악합니다.
+              </Text>
+            </Flex>
+          </Card>
+
+          <Card size="3" style={{ flex: 1 }}>
+            <Flex direction="column" gap="2">
+              <Text size="6" weight="bold" color="gray">
+                03
+              </Text>
+              <Heading size="4">질문 생성</Heading>
+              <Text size="2" color="gray">
+                이력서 맞춤형 면접 질문을 생성하여 실전 면접에 대비할 수 있습니다.
+              </Text>
+            </Flex>
+          </Card>
+        </Flex>
+      </Container>
+    </Box>
   );
 }
