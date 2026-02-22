@@ -10,6 +10,7 @@ import {
   Box,
   Callout,
   Spinner,
+  Select,
 } from "@radix-ui/themes";
 
 function parseQuestions(raw: string): string[] {
@@ -34,10 +35,29 @@ function parseQuestions(raw: string): string[] {
 
 export default function FileUpload() {
   const [file, setFile] = useState<File | null>(null);
+  const [role, setRole] = useState("");
+  const [experience, setExperience] = useState("");
   const [loading, setLoading] = useState(false);
   const [questions, setQuestions] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const roles = [
+    { value: "frontend", label: "프론트엔드" },
+    { value: "backend", label: "백엔드" },
+    { value: "fullstack", label: "풀스택" },
+    { value: "mobile", label: "모바일" },
+    { value: "devops", label: "DevOps" },
+    { value: "data", label: "데이터 엔지니어" },
+  ];
+
+  const experiences = [
+    { value: "less-than-1", label: "1년 미만" },
+    { value: "1-2", label: "1~2년" },
+    { value: "3-5", label: "3~5년" },
+    { value: "5-10", label: "5~10년" },
+    { value: "10-plus", label: "10년 이상" },
+  ];
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
@@ -61,6 +81,8 @@ export default function FileUpload() {
     try {
       const formData = new FormData();
       formData.append("file", file);
+      if (role) formData.append("role", role);
+      if (experience) formData.append("experience", experience);
 
       const response = await fetch("/api/analyze", {
         method: "POST",
@@ -91,6 +113,40 @@ export default function FileUpload() {
       <Text size="3" color="gray">
         PDF 이력서를 업로드하면 AI가 맞춤 면접 질문을 생성합니다.
       </Text>
+
+      {/* Role & Experience Select */}
+      <Flex gap="4" direction={{ initial: "column", sm: "row" }}>
+        <Flex direction="column" gap="2" style={{ flex: 1 }}>
+          <Text size="2" weight="medium">
+            지원 직무
+          </Text>
+          <Select.Root value={role} onValueChange={setRole}>
+            <Select.Trigger placeholder="선택사항" />
+            <Select.Content>
+              {roles.map((r) => (
+                <Select.Item key={r.value} value={r.value}>
+                  {r.label}
+                </Select.Item>
+              ))}
+            </Select.Content>
+          </Select.Root>
+        </Flex>
+        <Flex direction="column" gap="2" style={{ flex: 1 }}>
+          <Text size="2" weight="medium">
+            경력
+          </Text>
+          <Select.Root value={experience} onValueChange={setExperience}>
+            <Select.Trigger placeholder="선택사항" />
+            <Select.Content>
+              {experiences.map((e) => (
+                <Select.Item key={e.value} value={e.value}>
+                  {e.label}
+                </Select.Item>
+              ))}
+            </Select.Content>
+          </Select.Root>
+        </Flex>
+      </Flex>
 
       {/* Upload Area */}
       <Card

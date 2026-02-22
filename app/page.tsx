@@ -21,9 +21,9 @@ export default function Home() {
               면접을 준비하세요
             </Heading>
             <Text size="4" color="gray" align="center" style={{ maxWidth: 480 }}>
-              PDF 이력서를 업로드하면 AI가 분석하여
+              PDF 이력서를 업로드하고 직무를 선택하면
               <br />
-              맞춤형 면접 질문을 생성해드립니다.
+              AI가 직무별 맞춤 면접 질문을 생성해드립니다.
             </Text>
           </Flex>
 

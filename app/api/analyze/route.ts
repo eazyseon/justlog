@@ -10,6 +10,8 @@ export async function POST(request: NextRequest) {
     // 1. 요청에서 PDF 파일 가져오기
     const formData = await request.formData();
     const file = formData.get("file") as File;
+    const role = formData.get("role") as string | null;
+    const experience = formData.get("experience") as string | null;
 
     if (!file) {
       return NextResponse.json(
@@ -37,9 +39,17 @@ export async function POST(request: NextRequest) {
     // 3. Gemini에 면접 질문 생성 요청
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
+    const roleContext = role
+      ? `\n지원 직무: ${role}\n해당 직무에서 중요한 역량과 기술을 중심으로 질문을 생성해주세요.\n`
+      : "";
+
+    const experienceContext = experience
+      ? `\n경력: ${experience}\n해당 경력 수준에 적합한 난이도와 깊이의 질문을 생성해주세요.\n`
+      : "";
+
     const prompt = `
 다음은 지원자의 이력서입니다. 이 이력서를 바탕으로 면접 질문 5개를 생성해주세요.
-
+${roleContext}${experienceContext}
 질문은 다음 기준으로 만들어주세요:
 1. 이력서에 적힌 경험과 프로젝트에 대한 구체적인 질문
 2. 기술 스택에 대한 심층 질문
