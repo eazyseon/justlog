@@ -12,13 +12,6 @@ import {
 export default function Home() {
   return (
     <Box style={{ minHeight: "100vh", background: "var(--gray-1)" }}>
-      {/* Header */}
-      <Container size="3" px="4" py="4">
-        <Heading size="4" weight="bold">
-          CHAGOK
-        </Heading>
-      </Container>
-
       {/* Hero */}
       <Container size="2" px="4">
         <Flex direction="column" align="center" gap="6" py="9">
