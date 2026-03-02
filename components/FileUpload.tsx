@@ -37,9 +37,11 @@ export default function FileUpload() {
   const [file, setFile] = useState<File | null>(null);
   const [role, setRole] = useState("");
   const [experience, setExperience] = useState("");
+  const [questionType, setQuestionType] = useState("");
   const [loading, setLoading] = useState(false);
   const [questions, setQuestions] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const roles = [
@@ -59,6 +61,12 @@ export default function FileUpload() {
     { value: "10-plus", label: "10년 이상" },
   ];
 
+  const questionTypes = [
+    { value: "technical", label: "기술 질문 위주" },
+    { value: "experience", label: "경험 질문 위주" },
+    { value: "balanced", label: "균형 있게" },
+  ];
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     setQuestions(null);
@@ -71,18 +79,29 @@ export default function FileUpload() {
     }
   };
 
+  const handleCopy = async () => {
+    if (!questions) return;
+    const parsedForCopy = parseQuestions(questions);
+    const text = parsedForCopy.map((q, i) => `${i + 1}. ${q}`).join("\n\n");
+    await navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   const handleSubmit = async () => {
     if (!file) return;
 
     setLoading(true);
     setError(null);
     setQuestions(null);
+    setCopied(false);
 
     try {
       const formData = new FormData();
       formData.append("file", file);
       if (role) formData.append("role", role);
       if (experience) formData.append("experience", experience);
+      if (questionType) formData.append("questionType", questionType);
 
       const response = await fetch("/api/analyze", {
         method: "POST",
@@ -141,6 +160,21 @@ export default function FileUpload() {
               {experiences.map((e) => (
                 <Select.Item key={e.value} value={e.value}>
                   {e.label}
+                </Select.Item>
+              ))}
+            </Select.Content>
+          </Select.Root>
+        </Flex>
+        <Flex direction="column" gap="2" style={{ flex: 1 }}>
+          <Text size="2" weight="medium">
+            질문 유형
+          </Text>
+          <Select.Root value={questionType} onValueChange={setQuestionType}>
+            <Select.Trigger placeholder="선택사항" />
+            <Select.Content>
+              {questionTypes.map((q) => (
+                <Select.Item key={q.value} value={q.value}>
+                  {q.label}
                 </Select.Item>
               ))}
             </Select.Content>
@@ -220,9 +254,30 @@ export default function FileUpload() {
       {/* Results */}
       {questions && (
         <Flex direction="column" gap="4">
-          <Heading size="5" weight="bold">
-            생성된 면접 질문
-          </Heading>
+          <Flex align="center" justify="between">
+            <Heading size="5" weight="bold">
+              생성된 면접 질문
+            </Heading>
+            <Flex gap="2">
+              <Button
+                size="2"
+                variant="soft"
+                onClick={handleCopy}
+                style={{ cursor: "pointer" }}
+              >
+                {copied ? "복사됨!" : "전체 복사"}
+              </Button>
+              <Button
+                size="2"
+                variant="soft"
+                onClick={handleSubmit}
+                disabled={loading}
+                style={{ cursor: loading ? "not-allowed" : "pointer" }}
+              >
+                {loading ? <Spinner size="1" /> : "다시 생성"}
+              </Button>
+            </Flex>
+          </Flex>
           {parsedQuestions.map((q, i) => (
             <Card key={i} size="2">
               <Flex gap="3" align="start">
